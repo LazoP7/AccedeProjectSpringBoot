@@ -1,0 +1,39 @@
+server:
+  port:8080
+
+spring:
+  application:
+    name: Accede
+  profiles:
+    active: dev
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: AccedeProject
+    password: "xofe bttm rxep zttk"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+          enable: true
+logging:
+  level:
+    org.springframework.security: TRACE
+
+web:
+  cors:
+    allowed-origins: "http://localhost:4200"
+    allowed-methods: GET, POST, PATCH, PUT, DELETE, OPTIONS, HEAD
+    max-age: 3600
+    allowed-headers: "Requestor-Type"
+    exposed-headers: "X-Get-Header"
+
+jwt:
+  secret: "mySecretKeyShouldBeLongEnoughToMeetSecurityRequirements"
+  expirationMs : 1800000
+  refreshMs : 5400000

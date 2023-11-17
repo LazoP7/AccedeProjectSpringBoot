@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    name: MySQL Database
+    url: jdbc:mysql://localhost:3306/accede?useSSL=false&serverTimezone=CET&allowPublicKeyRetrieval=true&useUnicode=true
+    username: root
+    password: LogateAccede6%
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL 8.x.x
+    #driver-class-name: com.mysql.cj.jdbc.Drive # MySQL < 8
+  jpa:
+    show-sql: true
