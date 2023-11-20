@@ -43,6 +43,7 @@ public class UserService {
         roles.add(role);
         user.setRoles(roles);
         this.userRepository.save(user);
+        logger.info(user.getUsername());
     }
 
     public UserDTO getUserById(Integer id) {

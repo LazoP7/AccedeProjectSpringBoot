@@ -22,7 +22,7 @@ import MyProjects.Accede.security.ott.OTTUtility;
 import MyProjects.Accede.services.EmailService;
 
 @RestController
-@CrossOrigin()
+@CrossOrigin
 @RequestMapping({"auth"})
 public class AuthController {
     private static final Logger log = LoggerFactory.getLogger(AuthController.class);
@@ -46,10 +46,10 @@ public class AuthController {
             Authentication auth = this.authenticationManager.authenticate(authentication);
             JwtDTO token = this.jwtUtils.generateJwtToken(auth, userLogin.getRememberMe());
             log.info("Generisani token je : {}", token.getAccessToken());
-            return new ResponseEntity(token, HttpStatus.CREATED);
+            return new ResponseEntity<>(token, HttpStatus.CREATED);
         } catch (Exception var5) {
             log.error("Expection triggered: {}", var5.getMessage());
-            return new ResponseEntity(HttpStatus.EXPECTATION_FAILED);
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
         }
     }
 
@@ -62,10 +62,10 @@ public class AuthController {
             Integer ott = this.ottUtility.generateOtt(auth.getName());
             log.info("Generisani ott je : {}", ott);
             this.emailService.sendMessage(userLogin.getUsername(), "OTT code", ott.toString());
-            return new ResponseEntity(HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception var5) {
             log.error("Exception triggered: {}", var5.getMessage());
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -73,9 +73,9 @@ public class AuthController {
     public ResponseEntity<JwtDTO> authenticateUserWithOTT(@RequestBody UserLogin2Fact userLogin2Fact) {
         if (userLogin2Fact.getOtt().equals(this.ottUtility.getOTTByKey(userLogin2Fact.getUsername()))) {
             JwtDTO token = this.jwtUtils.generateJwtTokenWith2Fact(userLogin2Fact.getUsername());
-            return new ResponseEntity(token, HttpStatus.CREATED);
+            return new ResponseEntity<>(token, HttpStatus.CREATED);
         } else {
-            return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 }
