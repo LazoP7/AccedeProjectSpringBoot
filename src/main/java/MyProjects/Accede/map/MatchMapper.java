@@ -7,7 +7,6 @@ import MyProjects.Accede.entities.SportMatch;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-import MyProjects.Accede.map.PlayerMapper;
 import java.util.ArrayList;
 
 @Mapper(
@@ -22,7 +21,8 @@ public interface MatchMapper {
     String locationToLocationName(Location location);
 
     @Mapping(source = "location", target = "locationName")
-    MatchDTO SportMatchtoMatchDTO(SportMatch sportMatch);
+    @Mapping(source = "open", target = "open")
+    MatchDTO SportMatchtoMatchDTO (SportMatch sportMatch);
 
-    ArrayList<MatchDTO> SportMatchestoMatchesDTO(ArrayList<SportMatch> sportMatches);
+    ArrayList<MatchDTO> SportMatchestoMatchesDTO (ArrayList<SportMatch> sportMatches);
 }

@@ -26,4 +26,7 @@ public interface LocationRepository extends JpaRepository<Location, Integer> {
     @Modifying
     @Query("UPDATE Location loc SET loc = ?1 WHERE loc.id = ?2")
     void updateLocation(Location location, Integer id);
+
+    @Query("Select l from Location l")
+    ArrayList<Location> getAllLocations();
 }

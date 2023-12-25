@@ -12,6 +12,4 @@ public class LocationDTO {
     private String name;
     private String address;
     private List<MatchDTO> sportMatches;
-
-
 }

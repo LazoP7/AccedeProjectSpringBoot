@@ -27,7 +27,7 @@ public interface MatchRepository extends JpaRepository<SportMatch, Integer> {
     )
     void createMatch(@Param("date") Calendar date, @Param("locationId") Integer locationId, @Param("numOfPlayers") int numOfPlayers);
 
-    @Query("SELECT match FROM SportMatch match WHERE match.location.name = :locationName AND FUNCTION('MONTH', match.date) = FUNCTION('MONTH', :day) AND FUNCTION('DAY', match.date) = FUNCTION('DAY', :day)")
+    @Query("SELECT match FROM SportMatch match WHERE match.location.name = :locationName AND FUNCTION('MONTH', match.date) = FUNCTION('MONTH', :day) AND FUNCTION('DAY', match.date) = FUNCTION('DAY', :day) AND FUNCTION('YEAR', match.date) = FUNCTION('YEAR', :day)")
     ArrayList<SportMatch> getByLocationAndDay(@Param("locationName") String locationName, @Param("day") Calendar day);
 
     @Query("SELECT match FROM SportMatch match WHERE location.name = ?1")
@@ -36,7 +36,9 @@ public interface MatchRepository extends JpaRepository<SportMatch, Integer> {
     @Query("SELECT match FROM SportMatch match WHERE DATE(date) = :day")
     ArrayList<SportMatch> getMatchByDate(@Param("day") Calendar day);
 
-    @Query("SELECT match FROM SportMatch match WHERE location.name = :locationName AND STR_TO_DATE(date, '%Y-%m-%d %H:%i:%s') = :dateTime")
+    @Query("SELECT match FROM SportMatch match " +
+            "WHERE location.name = :locationName " +
+            "AND STR_TO_DATE(CONCAT(match.date, ' ', HOUR(match.date), ':', MINUTE(match.date), ':', SECOND(match.date)), '%Y-%m-%d %H:%i:%s') = :dateTime")
     SportMatch getMatchByDateAndTime(@Param("locationName") String locationName, @Param("dateTime") String dateTime);
 
     @Modifying

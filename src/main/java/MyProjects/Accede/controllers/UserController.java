@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import MyProjects.Accede.dto.role.UserRoleRequestDTO;
+import MyProjects.Accede.entities.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,8 +41,22 @@ public class UserController {
     }
 
     @PutMapping({"roles"})
-    public void setUserRoles(@RequestBody UserRoleRequestDTO requestDTO) {
-        Set<RoleDTO> rolesDTO = new HashSet(requestDTO.getRoles());
-        this.userService.setRoles(requestDTO.getUserId(), rolesDTO);
+    public void setUserRoles(@RequestParam int userId, String userRoles) {
+        this.userService.setRoles(userId, userRoles);
+    }
+
+    @PutMapping("updateDescr")
+    public void updateDescr(@RequestParam Integer userId, String profDescr){
+        this.userService.updateDescr(userId, profDescr);
+    }
+
+    @GetMapping("checkRoles")
+    public ResponseEntity<Set<String>> checkRoles(@RequestParam String username){
+        return new ResponseEntity<>(this.userService.checkRoles(username), HttpStatus.OK);
+    }
+
+    @PutMapping("addRep")
+    public void addRep(@RequestParam String username){
+        this.userService.addRep(username);
     }
 }

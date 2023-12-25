@@ -18,6 +18,7 @@ import lombok.Data;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -32,6 +33,8 @@ public class SportMatch {
     private Calendar date;
     @Column(name = "num_of_players")
     private Integer num_of_players;
+    @Column(name = "is_open")
+    private boolean open;
 
 
     @JsonBackReference
@@ -48,5 +51,16 @@ public class SportMatch {
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
     private Set<User> players = new HashSet();
+
+    public void addPlayer(User user) {
+        this.players.add(user);
+        user.getMySportMatches().add(this);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, date, num_of_players);
+    }
+
 
 }

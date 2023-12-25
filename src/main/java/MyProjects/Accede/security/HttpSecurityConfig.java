@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,18 +41,14 @@ public class HttpSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .cors(httpSecurityCorsConfigurer -> corsConfigurationSource())
+                .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement((session) -> {
-            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        }).exceptionHandling((exception) -> {
-            exception.authenticationEntryPoint(this.authEntryPointExceptionHandling);
-        }).authorizeHttpRequests((auth) -> {
-            ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl)auth.anyRequest()).permitAll();
-        });
+                .sessionManagement(session -> {session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);})
+                .exceptionHandling(exception -> {exception.authenticationEntryPoint(this.authEntryPointExceptionHandling);})
+                .authorizeHttpRequests(auth -> {auth.anyRequest().permitAll();});
         httpSecurity.authenticationProvider(this.authenticationProvider());
-        httpSecurity.addFilterBefore(this.authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        return (SecurityFilterChain)httpSecurity.build();
+        httpSecurity.addFilterAfter(this.authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        return httpSecurity.build();
     }
 
     @Bean

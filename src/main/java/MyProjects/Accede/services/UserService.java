@@ -2,12 +2,13 @@
 package MyProjects.Accede.services;
 
 import jakarta.transaction.Transactional;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import MyProjects.Accede.dto.role.RoleDTO;
@@ -28,9 +29,6 @@ public class UserService {
     RoleRepository roleRepository;
     private static final Logger logger = LoggerFactory.getLogger(MatchService.class);
 
-    public UserService() {
-    }
-
     public void createUser(UserDTO userDTO) {
         userDTO.setProfDescr("");
         userDTO.setReputation(0);
@@ -43,7 +41,7 @@ public class UserService {
         roles.add(role);
         user.setRoles(roles);
         this.userRepository.save(user);
-        logger.info(user.getUsername());
+        logger.info(user.getMail());
     }
 
     public UserDTO getUserById(Integer id) {
@@ -52,22 +50,60 @@ public class UserService {
     }
 
     @Transactional
-    public void setRoles(int userId, Set<RoleDTO> rolesDTO) {
-        Set<Role> roles2 = new HashSet();
-        Iterator var4 = rolesDTO.iterator();
-
-        while(var4.hasNext()) {
-            RoleDTO role = (RoleDTO)var4.next();
-            logger.info(Integer.toString(role.getId()));
-            roles2.add((Role)this.roleRepository.getReferenceById(role.getId()));
+    public void setRoles(int userId, String strRoles) {
+        String[] listroles = new String[5];
+        listroles = strRoles.split(",");
+        Set<String> roles = new HashSet<>(Arrays.asList(listroles));
+        Set<Role> roleSet = new HashSet<>();
+        Integer roleId = 3;
+        for(String strRole: roles){
+            if(strRole.equals("Player")){
+                roleId = 3;
+            }
+            if(strRole.equals("Owner")){
+                roleId = 2;
+            }
+            if(strRole.equals("Admin")){
+                roleId = 1;
+            }
+            roleSet.add(this.roleRepository.getReferenceById(roleId));
         }
-
-        User user = (User)this.userRepository.getReferenceById(userId);
-        user.setRoles(roles2);
+        User user = this.userRepository.getReferenceById(userId);
+        user.setRoles(roleSet);
         this.userRepository.save(user);
     }
 
     public UserDTO getUserByUsername(String username) {
-        return this.userMapper.UsertoUserDTO(this.userRepository.findByUsername(username));
+        UserDTO user = this.userMapper.UsertoUserDTO(this.userRepository.findByUsername(username));
+        logger.info(user.getId() + "");
+        return user;
+    }
+
+    public void updateDescr(Integer userId, String profDescr) {
+        userRepository.updateDescr(userId, profDescr);
+    }
+
+    public Set<String> checkRoles(String username) {
+        User user = userRepository.findByUsername(username);
+        Set<Role> roles = user.getRoles();
+        Set<String> strRoles = new HashSet<>();
+        for(Role role : roles){
+            if(role.getRoleName().equals("ROLE_USER")){
+                strRoles.add("Player");
+            }
+            if(role.getRoleName().equals("ROLE_OWNER")){
+                strRoles.add("Owner");
+            }
+            if(role.getRoleName().equals("ROLE_ADMIN")){
+                strRoles.add("Admin");
+            }
+        }
+        return strRoles;
+    }
+    @Transactional
+    public void addRep(String username) {
+        User user = userRepository.findByUsername(username);
+        user.setReputation(user.getReputation()+1);
+        userRepository.save(user);
     }
 }

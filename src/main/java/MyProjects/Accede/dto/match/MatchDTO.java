@@ -8,13 +8,16 @@ import java.util.Set;
 import MyProjects.Accede.dto.location.LocationNameDTO;
 import MyProjects.Accede.dto.user.PlayerDTO;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
 public class MatchDTO {
+    private Integer id;
     private Calendar date;
     private Integer num_of_players;
     private LocationNameDTO locationName;
+    @Getter
+    private boolean open;
     private Set<PlayerDTO> players = new HashSet();
-
 
 }

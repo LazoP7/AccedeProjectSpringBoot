@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Data
@@ -52,5 +53,10 @@ public class User {
             mappedBy = "players"
     )
     private Set<SportMatch> mySportMatches = new HashSet();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, username, mail, password, reputation, age, profDescr);
+    }
 
 }
