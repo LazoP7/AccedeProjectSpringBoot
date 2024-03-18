@@ -26,7 +26,9 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
 
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException
+    // Filter for token and user authentication
+    {
         try {
             String jwt = this.parseJwt(request);
             if (jwt != null && this.jwtUtils.validateJwtToken(jwt)) {
@@ -35,7 +37,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
                 authentication.setDetails((new WebAuthenticationDetailsSource()).buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                logger.info("User {} successfully authenticated", username);
+//                logger.info("User {} successfully authenticated", username);
             }
         } catch (Exception e) {
             logger.error("Cannot set User authentication: {}", e);
@@ -44,7 +46,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String parseJwt(HttpServletRequest request) {
+    private String parseJwt(HttpServletRequest request) //Java web token parse
+    {
         String headerAuth = request.getHeader("Authorization");
         return StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ") ? headerAuth.substring(7) : null;
     }

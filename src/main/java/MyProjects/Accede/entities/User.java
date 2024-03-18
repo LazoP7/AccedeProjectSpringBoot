@@ -12,7 +12,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -47,12 +46,12 @@ public class User {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")}
     )
-    private Set<Role> roles = new HashSet();
+    private Set<Role> roles = new HashSet<>();
     @JsonBackReference
     @ManyToMany(
             mappedBy = "players"
     )
-    private Set<SportMatch> mySportMatches = new HashSet();
+    private Set<SportMatch> mySportMatches = new HashSet<>();
 
     @Override
     public int hashCode() {

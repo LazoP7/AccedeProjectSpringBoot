@@ -15,7 +15,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
-
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Objects;
@@ -35,7 +34,8 @@ public class SportMatch {
     private Integer num_of_players;
     @Column(name = "is_open")
     private boolean open;
-
+    @Column(name = "type")
+    private int type;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
@@ -50,7 +50,7 @@ public class SportMatch {
             joinColumns = {@JoinColumn(name = "sport_match_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")}
     )
-    private Set<User> players = new HashSet();
+    private Set<User> players = new HashSet<>();
 
     public void addPlayer(User user) {
         this.players.add(user);

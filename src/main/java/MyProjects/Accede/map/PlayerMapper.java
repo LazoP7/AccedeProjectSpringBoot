@@ -11,6 +11,7 @@ import MyProjects.Accede.entities.User;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface PlayerMapper {
+public interface PlayerMapper //mapper between user and playerDTO objects
+{
     PlayerDTO UserToPlayerDTO(User user);
 }

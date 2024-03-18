@@ -35,10 +35,7 @@ public class AuthController {
     @Autowired
     EmailService emailService;
 
-    public AuthController() {
-    }
-
-    @PostMapping("/signin")
+    @PostMapping("/signin") //mapping for sign in
     public ResponseEntity<JwtDTO> authenticateUser(@RequestBody UserLogin userLogin) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword());
 
@@ -53,7 +50,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping({"signin_2fact"})
+    @PostMapping({"signin_2fact"}) //mapping for 2-factor authentication sign in
     public ResponseEntity<Void> authenticateUser2Fact(@RequestBody UserLogin userLogin) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userLogin.getUsername(), userLogin.getPassword());
 
@@ -69,7 +66,7 @@ public class AuthController {
         }
     }
 
-    @PostMapping({"signin_ott"})
+    @PostMapping({"signin_ott"}) //mapping for authenticating user based on OTT. Requests object of username and OTT
     public ResponseEntity<JwtDTO> authenticateUserWithOTT(@RequestBody UserLogin2Fact userLogin2Fact) {
         if (userLogin2Fact.getOtt().equals(this.ottUtility.getOTTByKey(userLogin2Fact.getUsername()))) {
             JwtDTO token = this.jwtUtils.generateJwtTokenWith2Fact(userLogin2Fact.getUsername());

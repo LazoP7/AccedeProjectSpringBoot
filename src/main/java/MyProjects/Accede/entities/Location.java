@@ -4,7 +4,6 @@ package MyProjects.Accede.entities;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +26,6 @@ public class Location {
             cascade = {CascadeType.ALL},
             orphanRemoval = true
     )
-    private List<SportMatch> sportMatches = new ArrayList();
+    private List<SportMatch> sportMatches = new ArrayList<>();
 
 }

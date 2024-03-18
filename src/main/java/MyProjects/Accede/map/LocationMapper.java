@@ -6,7 +6,6 @@ import MyProjects.Accede.entities.Location;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
-
 import java.util.ArrayList;
 
 
@@ -16,7 +15,8 @@ import java.util.ArrayList;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface LocationMapper {
+public interface LocationMapper //mapper between location and locationDTO objects
+{
     @Mapping(
             source = "sportMatches",
             target = "sportMatches"

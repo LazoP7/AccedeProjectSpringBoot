@@ -12,6 +12,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface LocationNameMapper {
+public interface LocationNameMapper
+{
     LocationNameDTO locationNameToString(Location location);
 }

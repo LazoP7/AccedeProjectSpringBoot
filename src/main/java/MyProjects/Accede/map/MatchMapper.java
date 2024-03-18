@@ -15,7 +15,8 @@ import java.util.ArrayList;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface MatchMapper {
+public interface MatchMapper //mapper between match and matchDTO objects
+{
     SportMatch MatchDTOtoSportMatch(MatchDTO matchDTO);
 
     String locationToLocationName(Location location);

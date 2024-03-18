@@ -2,7 +2,6 @@
 package MyProjects.Accede.dto.role;
 
 import lombok.Data;
-
 import java.util.List;
 
 @Data

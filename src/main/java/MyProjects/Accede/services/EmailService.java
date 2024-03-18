@@ -19,7 +19,8 @@ public class EmailService {
     public EmailService() {
     }
 
-    public void sendMessage(String to, String subject, String text) {
+    public void sendMessage(String to, String subject, String text)
+    {
         try {
             MimeMessage message = this.emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message);

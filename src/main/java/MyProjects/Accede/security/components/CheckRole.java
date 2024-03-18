@@ -11,21 +11,21 @@ public class CheckRole {
     @Autowired
     UserRepository userRepository;
 
-    public CheckRole() {
-    }
-
-    public boolean isAdmin(Integer id) {
-        User user = (User)this.userRepository.getReferenceById(id);
+    public boolean isAdmin(Integer id) //simple method for checking if user role is Admin
+    {
+        User user = this.userRepository.getReferenceById(id);
         return user.getRoles().contains("ROLE_ADMIN");
     }
 
-    public boolean isOwner(Integer id) {
-        User user = (User)this.userRepository.getReferenceById(id);
+    public boolean isOwner(Integer id) //simple method for checking if user role is Owner
+    {
+        User user = this.userRepository.getReferenceById(id);
         return user.getRoles().contains("ROLE_OWNER");
     }
 
-    public boolean isPlayer(Integer id) {
-        User user = (User)this.userRepository.getReferenceById(id);
+    public boolean isPlayer(Integer id) //simple method for checking if user role is Player
+    {
+        User user = this.userRepository.getReferenceById(id);
         return user.getRoles().contains("ROLE_PLAYER");
     }
 }

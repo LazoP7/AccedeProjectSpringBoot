@@ -12,7 +12,8 @@ import org.mapstruct.ReportingPolicy;
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
-public interface UserMapper {
+public interface UserMapper //mapper between user and userDTO objects
+{
     User UserDTOtoUser(UserDTO userDTO);
 
     UserDTO UsertoUserDTO(User user);

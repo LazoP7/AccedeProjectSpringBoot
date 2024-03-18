@@ -9,7 +9,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,6 +27,6 @@ public class Role {
             mappedBy = "roles",
             targetEntity = User.class
     )
-    private Set<User> user = new HashSet();
+    private Set<User> user = new HashSet<>();
 
 }

@@ -2,7 +2,6 @@
 package MyProjects.Accede.security.jwt;
 
 import MyProjects.Accede.security.dto.JwtDTO;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -29,44 +28,49 @@ public class JwtUtils {
     @Value("${jwt.refreshMs}")
     private int jwtRefreshMs;
 
-    public JwtDTO generateJwtToken(Authentication authentication, boolean rememberMe) {
-        String authorities = (String)authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+    public JwtDTO generateJwtToken(Authentication authentication, boolean rememberMe) //method for generating Jwt
+    {
+        String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(",")); //Setting Granted Authorities into a string
         String accessToken = Jwts.builder().setSubject(authentication.getName()).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + (long)this.jwtExpirationMs)).signWith(this.key(), SignatureAlgorithm.HS512).compact();
+        //building access token using jwt builder. Setting expiration timer on token in milliseconds and signed with a signature key
         String refreshToken = null;
-        if (rememberMe) {
+        if (rememberMe) //if rememberMe was selected in sign in, it creates a refreshToken that extends the time the user details stay remembered
+        {
             refreshToken = Jwts.builder().setSubject(authentication.getName()).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + (long)this.jwtRefreshMs)).signWith(this.key(), SignatureAlgorithm.HS512).compact();
         }
-
         return new JwtDTO(accessToken, refreshToken);
     }
 
-    private Key key() {
+    private Key key() //key signature for encryption of tokens using HS512 algorithm for its generation
+    {
         return Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
-    public String getUserNameFromJwtToken(String token) {
-        return ((Claims)Jwts.parserBuilder().setSigningKey(this.key()).build().parseClaimsJws(token).getBody()).getSubject();
+    public String getUserNameFromJwtToken(String token) //extracting username from jwt
+    {
+        return (Jwts.parserBuilder().setSigningKey(this.key()).build().parseClaimsJws(token).getBody()).getSubject();
     }
 
-    public boolean validateJwtToken(String authToken) {
+    public boolean validateJwtToken(String authToken) //try and catch block for jwt parse builder exceptions
+    {
         try {
             Jwts.parserBuilder().setSigningKey(this.key()).build().parse(authToken);
             return true;
-        } catch (MalformedJwtException var3) {
-            log.error("Invalid JWT token: {}", var3.getMessage());
-        } catch (ExpiredJwtException var4) {
-            log.error("JWT token is expired: {}", var4.getMessage());
-        } catch (UnsupportedJwtException var5) {
-            log.error("JWT token is unsupported: {}", var5.getMessage());
-        } catch (IllegalArgumentException var6) {
-            log.error("JWT claims string is empty: {}", var6.getMessage());
+        } catch (MalformedJwtException InvalidTokenException) {
+            log.error("Invalid JWT token: {}", InvalidTokenException.getMessage());
+        } catch (ExpiredJwtException ExpiredTokenException) {
+            log.error("JWT token is expired: {}", ExpiredTokenException.getMessage());
+        } catch (UnsupportedJwtException UnsupportedTokenException) {
+            log.error("JWT token is unsupported: {}", UnsupportedTokenException.getMessage());
+        } catch (IllegalArgumentException StringEmptyClaimException) {
+            log.error("JWT claims string is empty: {}", StringEmptyClaimException.getMessage());
         }
-
         return false;
     }
 
-    public JwtDTO generateJwtTokenWith2Fact(String username) {
+    public JwtDTO generateJwtTokenWith2Fact(String username) //generating jwt token with 2-factor authentication
+    {
         String accessToken = Jwts.builder().setSubject(username).setIssuedAt(new Date()).setExpiration(new Date((new Date()).getTime() + (long)this.jwtExpirationMs)).signWith(this.key(), SignatureAlgorithm.HS512).compact();
-        return new JwtDTO(accessToken, (String)null);
+        return new JwtDTO(accessToken, null);
     }
 }
